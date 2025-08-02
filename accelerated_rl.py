@@ -11,6 +11,7 @@ import jax
 import jax.numpy as jnp
 import flax.linen as nn
 import optax
+import tqdm
 from brax import envs
 
 
@@ -74,7 +75,7 @@ def train(env_name: str = "halfcheetah", num_timesteps: int = 1000, seed: int = 
     grad_fn = jax.jit(value_and_grad) if enable_jit else value_and_grad
 
     num_updates = jnp.maximum(1, num_timesteps // episode_length)
-    for _ in range(num_updates):
+    for _ in tqdm.tqdm( range(num_updates) ):
         rng, key = jax.random.split(rng)
         (loss, _), grads = grad_fn(params, key)
         updates, opt_state = optimizer.update(grads, opt_state)
@@ -86,7 +87,7 @@ def train(env_name: str = "halfcheetah", num_timesteps: int = 1000, seed: int = 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Train a PPO agent in Brax")
     parser.add_argument("--env", default="halfcheetah", help="Name of the Brax environment")
-    parser.add_argument("--num-timesteps", type=int, default=1000, help="Training timesteps")
+    parser.add_argument("--num-timesteps", type=int, default=10_000, help="Training timesteps")
     parser.add_argument("--seed", type=int, default=0, help="Random seed")
     args = parser.parse_args()
     train(env_name=args.env, num_timesteps=args.num_timesteps, seed=args.seed)
