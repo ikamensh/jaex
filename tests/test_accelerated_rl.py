@@ -14,6 +14,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from accelerated_rl import train
+import jax
 
 
 def test_train_runs_without_error():
@@ -26,3 +27,22 @@ def test_train_runs_without_error():
     """
     # Keep the number of timesteps small to make the test fast yet meaningful.
     train(num_timesteps=32, enable_jit=False)
+
+
+def test_train_reports_device(capsys):
+    """Ensure the training loop announces which device is being used.
+
+    Prior to this change the training function ran without revealing whether
+    JAX executed on CPU, GPU or TPU. This can lead to confusion when
+    debugging performance issues. We run a single training step and capture
+    stdout to verify that the selected backend is mentioned. Without the
+    fix this assertion fails because no such message is printed.
+    """
+
+    # A minimal run keeps the test quick while still exercising the print.
+    train(num_timesteps=1, enable_jit=False)
+
+    out, _ = capsys.readouterr()
+
+    # The print should include the backend name (e.g. "cpu" or "gpu").
+    assert jax.default_backend() in out
