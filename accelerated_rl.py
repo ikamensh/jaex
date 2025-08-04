@@ -49,6 +49,11 @@ def train(env_name: str = "halfcheetah", num_timesteps: int = 1000, seed: int = 
     env = envs.get_environment(env_name)
     episode_length = jnp.minimum(1000, num_timesteps)
 
+    # Surface which device JAX computations will run on. This helps users
+    # understand whether they are utilizing CPU, GPU or TPU resources.
+    backend = jax.default_backend()
+    print(f"Training on {backend} device")
+
     policy = Policy(env.action_size)
     rng = jax.random.PRNGKey(seed)
     params = policy.init(rng, jnp.zeros((env.observation_size,)))
