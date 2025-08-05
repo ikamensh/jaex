@@ -93,7 +93,6 @@ def progress(num_steps: int, metrics: dict[str, float]) -> None:
     _y.append(metrics["eval/episode_reward"])
     _yerr.append(metrics["eval/episode_reward_std"])
     _time.append(datetime.now())
-
     _bar.update(_task, completed=num_steps, reward=_y[-1])
 
 def finalize_progress() -> None:

@@ -6,3 +6,5 @@ mujoco
 mujoco_mjx
 brax
 playground
+rich
+matplotlib
