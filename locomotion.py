@@ -42,6 +42,7 @@ registry.get_domain_randomizer(env_name)
 """### Train
 
 The policy takes 7 minutes to train on an RTX 4090.
+Measured it to take 50 minutes on a GTX 1080
 """
 from rich.progress import (
     Progress,
