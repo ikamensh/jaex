@@ -13,7 +13,7 @@ import sys
 # imported when tests are executed from within the tests directory.
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from accelerated_rl import train
+from using_brax import train
 import jax
 
 
